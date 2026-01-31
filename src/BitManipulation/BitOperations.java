@@ -51,5 +51,15 @@ public class BitOperations {
 
         return (short)(l | r);
     }
+
+    public static long expander(byte b) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'expander'");
+    }
+
+    public static long keyextractor(short key, int pos) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'keyextractor'");
+    }
     
 }
