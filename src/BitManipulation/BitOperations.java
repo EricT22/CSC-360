@@ -2,6 +2,16 @@ package BitManipulation;
 
 public class BitOperations {
 
+    private static int[][] s1 = {
+            {0b101, 0b010, 0b001, 0b110, 0b011, 0b100, 0b111, 0b000},
+            {0b001, 0b100, 0b110, 0b010, 0b000, 0b111, 0b101, 0b011}
+        };
+
+    private static int[][] s2 = {
+            {0b100, 0b000, 0b110, 0b101, 0b111, 0b001, 0b011, 0b010},
+            {0b101, 0b011, 0b000, 0b111, 0b110, 0b010, 0b001, 0b100}
+        };
+
     public static int left(byte _byte) {
         int b = (int)_byte;
         int mask = 0x000000FF;
@@ -84,5 +94,27 @@ public class BitOperations {
 
         return (byte)k;
     }
+
     
+    public static byte S1(byte _byte){
+        int left = left(_byte);
+        int right = right(_byte);
+
+        int row = left >> 3;
+
+        int col = left & 0x7;
+
+        return (byte)(right + s1[row][col]);
+    }
+
+    public static byte S2(byte _byte){
+        int left = left(_byte);
+        int right = right(_byte);
+
+        int row = left >> 3;
+
+        int col = left & 0x7;
+
+        return (byte)(right + s2[row][col]);
+    }
 }
