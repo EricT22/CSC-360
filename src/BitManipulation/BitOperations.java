@@ -100,21 +100,21 @@ public class BitOperations {
         int left = left(_byte);
         int right = right(_byte);
 
-        int row = left >> 3;
+        int row = right >> 3;
 
-        int col = left & 0x7;
+        int col = right & 0x7;
 
-        return (byte)(right + s1[row][col]);
+        return (byte)((left << 4) + s1[row][col]);
     }
 
     public static byte S2(byte _byte){
         int left = left(_byte);
         int right = right(_byte);
 
-        int row = left >> 3;
+        int row = right >> 3;
 
-        int col = left & 0x7;
+        int col = right & 0x7;
 
-        return (byte)(right + s2[row][col]);
+        return (byte)((left << 4) + s2[row][col]);
     }
 }
