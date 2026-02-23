@@ -117,4 +117,27 @@ public class BitOperations {
 
         return (byte)((left << 4) + s2[row][col]);
     }
+
+
+    public static byte feistel(byte r, byte k) {
+        // expander
+        int e = expander(r);
+
+        // xor
+        e ^= k;
+
+        // Split
+        int left = left((byte) e);
+        int right = right((byte) e);
+
+        // S1 & S2
+        left = S1((byte) left);
+        right = S2((byte) right);
+
+        // Concat
+        int ls1 = (left & 0x07) << 3;
+        int rs2 = right & 0x07;
+
+        return (byte)(ls1 + rs2);
+    }
 }
