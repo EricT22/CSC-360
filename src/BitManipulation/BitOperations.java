@@ -1,5 +1,6 @@
 package BitManipulation;
 
+
 public class BitOperations {
 
     private static int[][] s1 = {
@@ -139,5 +140,79 @@ public class BitOperations {
         int rs2 = right & 0x07;
 
         return (byte)(ls1 + rs2);
+    }
+
+    public static short[] preprocess(String s){
+        byte[] bytes = s.getBytes();
+
+        // Multiple of 3
+        while (bytes.length % 3 != 0){
+            byte[] temp = bytes.clone();
+            bytes = new byte[temp.length + 1];
+
+            for (int i = 0; i < temp.length; i++){
+                bytes[i] = temp[i];
+            }
+        }
+
+        // combining into short array
+        short[] arr = new short[bytes.length / 3 * 2];
+        int arrInd = 0;
+
+        for (int i = 0; i < bytes.length; i += 3){
+            byte b0 = bytes[i];
+            byte b1 = bytes[i + 1];
+            byte b2 = bytes[i + 2];
+
+            int x = (int)b0;
+            x <<= 4;
+
+            int yLeft = left(b1);
+            
+            int yRight = right(b1);
+            yRight <<= 8;
+
+            int z = (int)b2;
+
+            arr[arrInd] = (short)(x + yLeft);
+            arrInd++;
+            arr[arrInd] = (short)(yRight + z);
+            arrInd++;
+        }
+
+        return arr;
+    }
+
+    public static byte[] postprocess(short[] s){
+        byte[] b = new byte[s.length * 3 / 2];
+        int bInd = 0;
+
+        for (int i = 0; i < s.length; i += 2){
+            short s0 = s[i];
+            short s1 = s[i + 1];
+
+            byte x = (byte)(((int)s0) >> 4);
+
+            int yLeft = ((int)s0) & 0xF;
+            yLeft <<= 4;
+
+            int yRight = ((int)s1) >> 8;
+            yRight &= 0xF;
+
+            byte y = (byte)(yLeft + yRight);
+
+            byte z = (byte)(((int)s1) & 0xFF);
+
+
+            b[bInd] = x;
+            bInd++;
+            b[bInd] = y;
+            bInd++;
+            b[bInd] = z;
+            bInd++;
+        }
+
+
+        return b;
     }
 }
