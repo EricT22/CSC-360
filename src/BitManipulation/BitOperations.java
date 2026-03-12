@@ -219,7 +219,7 @@ public class BitOperations {
     public static short encode12(short plain, int round, short key9){
         byte key = extract9(key9, round);
 
-        int left = ((int)plain & 0x3FF) >> 6;
+        int left = ((int)plain & 0xFFF) >> 6;
         
         int right = ((int)plain & 0x3F);
 
@@ -234,7 +234,7 @@ public class BitOperations {
     public static short decode12(short cipher, int round, short key9){
         byte key = extract9(key9, round);
 
-        int right = ((int)cipher & 0x3FF) >> 6; // old left side
+        int right = ((int)cipher & 0xFFF) >> 6; // old left side
         
         int left = ((int)cipher & 0x3F); // old right side
 
@@ -246,10 +246,25 @@ public class BitOperations {
     }
 
     private static byte extract9(short k, int position){
-        int front = (int)k & (0x1F - position) << (position); // should work
-        // int back  = (int)k & (0x1F - position) << (position);
-        // find the back
+        long expandedKey = (((long)k << 55) | ((long)k << 46) | ((long) k << 37));
 
-        return (byte)front;
+        expandedKey <<= position;
+        expandedKey >>= 56;
+        return (byte)(expandedKey);
     }
+
+    // Testing encode/decode
+    // public static void main(String[] args) {
+    //     short key = 0b100100110;
+    //     short plain = (short)0b111111111111;
+
+    //     System.out.println(plain + "\n");
+
+    //     for (int round = 0; round < 9; round++){
+    //         short c = encode12(plain, round, key);
+    //         short d = decode12(c, round, key);
+
+    //         System.out.println("(" + round + "): " + c + "\t" + d);
+    //     }
+    // }
 }
