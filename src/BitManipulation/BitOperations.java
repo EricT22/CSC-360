@@ -183,6 +183,37 @@ public class BitOperations {
         return arr;
     }
 
+    // Overloaded function
+    public static short[] preprocess(byte[] bytes){
+
+        // combining into short array
+        short[] arr = new short[bytes.length / 3 * 2];
+        int arrInd = 0;
+
+        for (int i = 0; i < bytes.length; i += 3){
+            byte b0 = bytes[i];
+            byte b1 = bytes[i + 1];
+            byte b2 = bytes[i + 2];
+
+            int x = (int)b0;
+            x <<= 4;
+
+            int yLeft = left(b1);
+            
+            int yRight = right(b1);
+            yRight <<= 8;
+
+            int z = (int)b2;
+
+            arr[arrInd] = (short)(x + yLeft);
+            arrInd++;
+            arr[arrInd] = (short)(yRight + z);
+            arrInd++;
+        }
+
+        return arr;
+    }
+
     public static byte[] postprocess(short[] s){
         byte[] b = new byte[s.length * 3 / 2];
         int bInd = 0;
@@ -253,4 +284,26 @@ public class BitOperations {
         return (byte)(expandedKey);
     }
 
+
+    public static byte[] simpleDESEncrypt(String plain, short key9){
+        short[] preprocessed = preprocess(plain);
+        short[] cipher = new short[preprocessed.length];
+
+        for (int i = 0; i < preprocessed.length; i++){
+            cipher[i] = encode12(preprocessed[i], 1, key9);
+        }
+
+        return postprocess(cipher);
+    }
+
+    public static String simpleDESDecrypt(byte[] cipher, short key9){
+        short[] preprocessed = preprocess(cipher);
+        short[] plain = new short[preprocessed.length];
+
+        for (int i = 0; i < preprocessed.length; i++){
+            plain[i] = decode12(preprocessed[i], 1, key9);
+        }
+
+        return new String(postprocess(plain));
+    }
 }
