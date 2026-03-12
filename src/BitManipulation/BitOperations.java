@@ -215,4 +215,41 @@ public class BitOperations {
 
         return b;
     }
+
+    public static short encode12(short plain, int round, short key9){
+        byte key = extract9(key9, round);
+
+        int left = ((int)plain & 0x3FF) >> 6;
+        
+        int right = ((int)plain & 0x3F);
+
+        int newRight = feistel((byte) right, key);
+
+        int xor = newRight ^ left;
+
+        return (short)((right << 6) + xor);
+    }
+
+
+    public static short decode12(short cipher, int round, short key9){
+        byte key = extract9(key9, round);
+
+        int right = ((int)cipher & 0x3FF) >> 6; // old left side
+        
+        int left = ((int)cipher & 0x3F); // old right side
+
+        int newRight = feistel((byte)right, key);
+
+        int xor = newRight ^ left;
+
+        return (short)((xor << 6) + right);
+    }
+
+    private static byte extract9(short k, int position){
+        int front = (int)k & (0x1F - position) << (position); // should work
+        // int back  = (int)k & (0x1F - position) << (position);
+        // find the back
+
+        return (byte)front;
+    }
 }
