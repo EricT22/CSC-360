@@ -165,6 +165,7 @@ public class BitOperations {
             byte b2 = bytes[i + 2];
 
             int x = (int)b0;
+            x &= 0xFF;
             x <<= 4;
 
             int yLeft = left(b1);
@@ -173,6 +174,7 @@ public class BitOperations {
             yRight <<= 8;
 
             int z = (int)b2;
+            z &= 0xFF;
 
             arr[arrInd] = (short)(x + yLeft);
             arrInd++;
@@ -196,6 +198,7 @@ public class BitOperations {
             byte b2 = bytes[i + 2];
 
             int x = (int)b0;
+            x &= 0xFF;
             x <<= 4;
 
             int yLeft = left(b1);
@@ -204,6 +207,7 @@ public class BitOperations {
             yRight <<= 8;
 
             int z = (int)b2;
+            z &= 0xFF;
 
             arr[arrInd] = (short)(x + yLeft);
             arrInd++;
@@ -286,22 +290,24 @@ public class BitOperations {
 
 
     public static byte[] simpleDESEncrypt(String plain, short key9){
-        short[] preprocessed = preprocess(plain);
-        short[] cipher = new short[preprocessed.length];
+        short[] cipher = preprocess(plain);
 
-        for (int i = 0; i < preprocessed.length; i++){
-            cipher[i] = encode12(preprocessed[i], 1, key9);
+        for (int j = 0; j <= 7; j++){
+            for (int i = 0; i < cipher.length; i++){
+                cipher[i] = encode12(cipher[i], (j % 9), key9);
+            }
         }
 
         return postprocess(cipher);
     }
 
     public static String simpleDESDecrypt(byte[] cipher, short key9){
-        short[] preprocessed = preprocess(cipher);
-        short[] plain = new short[preprocessed.length];
+        short[] plain = preprocess(cipher);
 
-        for (int i = 0; i < preprocessed.length; i++){
-            plain[i] = decode12(preprocessed[i], 1, key9);
+        for (int j = 7; j >= 0; j--){
+            for (int i = 0; i < plain.length; i++){
+                plain[i] = decode12(plain[i], (j % 9), key9);
+            }
         }
 
         return new String(postprocess(plain));
